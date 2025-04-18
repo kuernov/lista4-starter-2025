@@ -1,10 +1,15 @@
 package com.piisw.jpa.tasks;
 
 import com.piisw.jpa.entities.Event;
+import com.piisw.jpa.repositories.EventRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +21,9 @@ import static org.hamcrest.Matchers.notNullValue;
 @DataJpaTest
 class Task2 {
 
+    @Autowired
+    private EventRepository eventRepository;
+
 
     @Test
     void shouldFindOneEntryBetweenDatesThatMustBeAnalyzed() throws Exception {
@@ -26,9 +34,10 @@ class Task2 {
         int page = 0;
         int pageSize = 10;
         Sort sort = Sort.unsorted();
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
 
         // when
-        Page<Event> result = null;
+        Page<Event> result = eventRepository.findByTimeBetweenAndAnalysisRequired(start, end, toBeAnalyzed, pageable);
 
         // then
         assertThat(result, is(notNullValue()));
@@ -45,8 +54,10 @@ class Task2 {
         int pageSize = 10;
         Sort sort = Sort.by("time");
 
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+
         // when
-        Page<Event> result = null;
+        Page<Event> result = eventRepository.findByTimeBetweenAndAnalysisRequired(start, end, toBeAnalyzed, pageable);
 
         // then
         assertThat(result, is(notNullValue()));
@@ -65,8 +76,11 @@ class Task2 {
         int pageSize = 10;
         Sort sort = Sort.by("time");
 
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+
         // when
-        Page<Event> result = null;
+        Page<Event> result = eventRepository.findByTimeBetweenAndAnalysisRequired(start, end, toBeAnalyzed, pageable);
+
 
         // then
         assertThat(result.getTotalElements(), is(0L));

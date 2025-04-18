@@ -1,21 +1,19 @@
 package com.piisw.jpa.entities;
 
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SoftDelete;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
+@SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Server {
 
@@ -30,25 +28,32 @@ public class Server {
     @Column(nullable = false)
     private String ip;
 
+    private LocalDateTime createdDate;
+
+    private LocalDateTime lastUpdateDate;
+
+    @Version
+    private Long version;
+
+    @Column(name = "deleted", insertable=false, updatable=false)
+    private boolean deleted = false;
+
     public Server(String name, String ip) {
         super();
         this.name = name;
         this.ip = ip;
     }
 
-    public Long getVersion(){
-        //TODO: remove it
-        return null;
+    @PrePersist
+    protected void onCreate() {
+      LocalDateTime now = LocalDateTime.now();
+      this.createdDate = now;
+      this.lastUpdateDate = now;
     }
 
-    public LocalDateTime getCreatedDate(){
-        //TODO: remove it
-        return null;
-    }
-
-    public LocalDateTime getLastUpdateDate(){
-        //TODO: remove it
-        return null;
+    @PreUpdate
+    protected void onUpdate() {
+      this.lastUpdateDate = LocalDateTime.now();
     }
 
 }
