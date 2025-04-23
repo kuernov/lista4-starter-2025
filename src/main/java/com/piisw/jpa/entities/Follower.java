@@ -15,18 +15,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @NamedEntityGraph(
-  name = "Follower.withCommentAndEvent",
-  attributeNodes = {
-    @NamedAttributeNode(value = "comments", subgraph = "commentWithEvent")
-  },
-  subgraphs = {
-    @NamedSubgraph(
-      name = "commentWithEvent",
-      attributeNodes = {
-        @NamedAttributeNode("event")
-      }
-    )
-  }
+  name = "Follower.withCommentsAndEvent",
+  attributeNodes = @NamedAttributeNode(value = "comments", subgraph = "commentsWithEvent"),
+  subgraphs = @NamedSubgraph(
+    name = "commentsWithEvent",
+    attributeNodes = @NamedAttributeNode("event")
+  )
 )
 public class Follower {
     @Id

@@ -31,7 +31,7 @@ class Task3 {
         LocalDateTime givenDate = LocalDateTime.of(2017, 12, 31, 0, 0);
 
         // when
-        repository.deleteInBulkBeforDate(givenDate); // replace with repository method call
+        repository.deleteInBulkBeforeDate(givenDate); // replace with repository method call
 
         // then
         assertThat(new SimpleJpaRepository<Event, Long>(Event.class, entityManager).findAll(), hasSize(32));

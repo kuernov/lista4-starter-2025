@@ -33,16 +33,16 @@ class Task6 {
     List<Follower> result = followerRepository.findByUserId("Adam");
 
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).getUserId()).isEqualTo("Adam");
+    assertThat(result.getFirst().getUserId()).isEqualTo("Adam");
   }
 
   @Test
   void followerShouldContainComments() {
-    Follower follower = followerRepository.findByUserId("Adam").get(0);
+    Follower follower = followerRepository.findByUserId("Adam").getFirst();
 
     List<Comment> comments = follower.getComments();
     assertThat(comments).isNotEmpty();
-    assertThat(comments.get(0).getContent()).isEqualTo("Komentarz do zdarzenia 21");
+    assertThat(comments.getFirst().getContent()).isEqualTo("Komentarz do zdarzenia 21");
   }
 
   @Test
@@ -53,14 +53,13 @@ class Task6 {
 
   @Test
   void shouldReturnEventsForFollowerUserId() {
-    // Inicjalizujemy ręcznie serwis (ponieważ nie ma @SpringBootTest)
     this.followerService = new FollowerService(followerRepository);
 
     List<FollowerEventView> result = followerService.getEventsByFollowerUserId("Adam");
 
-    assertThat(result).isNotEmpty(); // powinno być 1 jeśli masz 1 komentarz
+    assertThat(result).isNotEmpty();
 
-    FollowerEventView view = result.get(0);
+    FollowerEventView view = result.getFirst();
     assertThat(view.eventDescription()).isNotBlank();
     assertThat(view.commentContent()).isEqualTo("Komentarz do zdarzenia 21");
     assertThat(view.subscriptionDate()).isNotNull();

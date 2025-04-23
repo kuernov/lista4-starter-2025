@@ -5,7 +5,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.Where;
 
 
 import java.time.LocalDateTime;
@@ -13,7 +16,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@SoftDelete
+@SQLDelete(sql = "UPDATE server SET is_active = false WHERE id = ?")
+@SQLRestriction("is_active = true")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Server {
 
@@ -35,8 +39,9 @@ public class Server {
     @Version
     private Long version;
 
-    @Column(name = "deleted", insertable=false, updatable=false)
-    private boolean deleted = false;
+    @Column(nullable = false)
+    private Boolean isActive = true;
+
 
     public Server(String name, String ip) {
         super();
